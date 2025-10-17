@@ -10,8 +10,7 @@ Here is the format that we are looking for:
 */
 import express from 'express';
 import Cards from '../models/Cards.js'
-// import db from '../db/conn.js'
-import { ObjectId } from 'mongodb';
+import Users from '../models/Users.js'
 
 const scryfallApi = 'https://api.scryfall.com/cards'// - /setcode/cn
 const router = express.Router();
@@ -22,7 +21,7 @@ router.get('/', async (req, res) =>{
 router.get('/:id', async (req, res) =>{
     try {
         const card = await Cards.find({_id: req.params.id});
-        res.send(await card).status(200);
+        res.send(card).status(200);
     }
     catch(e){
         res.send("Error: Incorrect ObjectId").status(400);
@@ -30,20 +29,6 @@ router.get('/:id', async (req, res) =>{
         // console.log(e.cause);
     }
 });
-
-// router.get('/:id', async (req, res) =>{
-//     try {
-//         const collection = await db.collection("cards");
-//         const query = {_id: new ObjectId(req.params.id)};
-//         const result = await collection.findOne(query);
-//         res.send(result).status(200);
-//     }
-//     catch(e){
-//         res.send("Error: Incorrect ObjectId").status(400);
-//         console.log(e);
-//         // console.log(e.cause);
-//     }
-// });
 
 router.post('/', async (req, res) =>{
     try {
@@ -79,40 +64,37 @@ router.post('/', async (req, res) =>{
     }
 });
 
+
+
 router.delete('/', async (req, res) =>{
     try {
-        const collection = await db.collection("users");
         const newDocument = req.body;
         if(newDocument.password && newDocument.username) {
-            const found = await collection.findOne(newDocument);
-            console.log(found);
-            if(found)
-            // const result = await collection.deleteOne(newDocument);
-            res.send(result).status(204);
+            const found = await Users.findOne({username: newDocument.username});
+            if(found && newDocument._id){
+                if(!found.isAdmin){
+                    throw new Error('Not Authorized!',{ cause: 401});
+                } else {
+                    const result = await Cards.deleteOne({_id: newDocument._id});
+                    res.send(result).status(204);
+                }
+            }            
+            else throw new Error('Incomplete Information',{ cause: 400});
         } else {
             throw new Error('Incomplete Information',{ cause: 400});
         }
     }
     catch(e){
-        console.log(e);
-        // console.log(e.cause);
-    }
-});
-
-router.get('/:id', async (req, res) =>{
-    try {
-        const collection = await db.collection("users");
-        const query = {username: req.params.id};
-        console.log(query);
-        const result = await collection.findOne(query);
-        console.log(result);
-        if(result) res.send(result).status(200);
-        else throw new Error('No Such User',{ cause: 400});
-    }
-    catch(e){
-        console.log(e);
-        const result = `<p> ${e}</p>`
-        res.send(result).status(e.cause);
+        switch(e.cause){
+            case 400:
+                res.send("Incomplete Information!").status(400);
+                break;
+            case 401:
+                res.send("Not Authorized!").status(401);
+                break;
+            default: 
+                res.send('Something went wrong...').status(500);
+        }
     }
 });
 

@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 const cardSchema = new mongoose.Schema({
     name: {
@@ -11,7 +11,7 @@ const cardSchema = new mongoose.Schema({
         minLength: 3
     },
     cn: {
-        type: String,
+        type: Number,
         required: true
     },
     images: {

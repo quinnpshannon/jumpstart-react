@@ -2,9 +2,11 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
-import cardRouter from './routes/cards.js';
+// import cardRouter from './routes/cards.js';
+import cardRouter from './routes/cardsReact.js';
 import authRouter from './routes/auth.js';
-import deckRouter from './routes/decksReact.js';
+import deckRouter from './routes/decks.js';
+// import deckRouter from './routes/decksReact.js';
 
 //env variables
 dotenv.config();

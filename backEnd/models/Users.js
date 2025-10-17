@@ -1,6 +1,6 @@
-import mongoose, {ObjectId} from "mongoose";
+import mongoose from "mongoose";
 
-const userSchema  = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -21,13 +21,13 @@ const userSchema  = new mongoose.Schema({
         type: String,
         required: true,
     },
-    checked: [{
+    decks: [{
         deckId: {
-        type: String,
-        default: ""
-    },
-    _id: false
-}
+            type: String,
+            default: ""
+        },
+        _id: false
+    }
     ],
     isAdmin: {
         type: Boolean,
