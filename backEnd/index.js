@@ -16,8 +16,6 @@ mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-// const allowedOrigins = ['http://localhost:5173',
-// 'https://honkai-share-rail.netlify.app/']
 
 //Middleware
 app.use(express.json());
