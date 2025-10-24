@@ -2,11 +2,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
+import cors from 'cors';
 // import cardRouter from './routes/cards.js';
 import cardRouter from './routes/cardsReact.js';
 import authRouter from './routes/auth.js';
-import deckRouter from './routes/decks.js';
-// import deckRouter from './routes/decksReact.js';
+// import deckRouter from './routes/decks.js';
+import deckRouter from './routes/decksReact.js';
 
 //env variables
 dotenv.config();
@@ -18,6 +19,8 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 //Middleware
+
+app.use(cors('*'));
 app.use(express.json());
 app.use(morgan('dev'));
 
